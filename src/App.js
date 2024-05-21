@@ -3,6 +3,10 @@ import StarRating from "./StarRating";
 import { useMovies } from "./useMovies";
 import { useLocalStorage } from "./useLocalStorage";
 import { useKey } from "./useKey";
+
+const average = (arr) =>
+  arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
+
 const KEY = "af57cbf1";
 
 // const tempMovieData = [
@@ -268,7 +272,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
       async function getMovieDetails() {
         setIsLoading(true);
         const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
+          `https://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
         );
         const data = await res.json();
         setMovie(data);
@@ -392,10 +396,40 @@ function WatchedMovie({ movie, onDeleteWatched }) {
   );
 }
 
+// function Summary({ watched }) {
+//   const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
+//   const avgUserRating = average(watched.map((movie) => movie.userRating));
+//   const avgRuntime = average(watched.map((movie) => movie.runtime));
+//   return (
+//     <div className="summary">
+//       <h2>Movies you watched</h2>
+//       <div>
+//         <p>
+//           <span>#️⃣</span>
+//           <span>{watched.length} movies</span>
+//         </p>
+//         <p>
+//           <span>⭐️</span>
+//           <span>{avgImdbRating}</span>
+//         </p>
+//         <p>
+//           <span>🌟</span>
+//           <span>{avgUserRating}</span>
+//         </p>
+//         <p>
+//           <span>⏳</span>
+//           <span>{avgRuntime} min</span>
+//         </p>
+//       </div>
+//     </div>
+//   );
+// }
+
 function Summary({ watched }) {
   const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
   const avgUserRating = average(watched.map((movie) => movie.userRating));
   const avgRuntime = average(watched.map((movie) => movie.runtime));
+
   return (
     <div className="summary">
       <h2>Movies you watched</h2>
@@ -406,11 +440,11 @@ function Summary({ watched }) {
         </p>
         <p>
           <span>⭐️</span>
-          <span>{avgImdbRating}</span>
+          <span>{avgImdbRating.toFixed(2)}</span>
         </p>
         <p>
           <span>🌟</span>
-          <span>{avgUserRating}</span>
+          <span>{avgUserRating.toFixed(2)}</span>
         </p>
         <p>
           <span>⏳</span>
@@ -420,6 +454,3 @@ function Summary({ watched }) {
     </div>
   );
 }
-
-const average = (arr) =>
-  arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
